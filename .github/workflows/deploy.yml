@@ -1,0 +1,33 @@
+name: Deploy to OCI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+
+      - name: Login Docker Hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -t ${{secrets.DOCKER_USERNAME}}/${{secrets.IMAGE_NAME}} ./backend
+      - name: Push image docker
+        run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.IMAGE_NAME}}
+              
+  deploy:
+      needs: build
+      runs-on: self-hosted
+      steps:
+          - name: Pull image from docker hub
+            run: docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.IMAGE_NAME}}:latest
+          - name: Remove docker container
+            run: |
+              export LETSENCRYPT_EMAIL=${{secrets.LETSENCRYPT_EMAIL}}
+              export APP_DOMAIN_URL=${{secrets.APP_DOMAIN_URL}}
+              cd /app/llm_api
+              git pull origin HEAD
+              docker compose up -d --build --force-recreate
