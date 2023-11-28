@@ -28,6 +28,6 @@ jobs:
             run: |
               export LETSENCRYPT_EMAIL=${{secrets.LETSENCRYPT_EMAIL}}
               export APP_DOMAIN_URL=${{secrets.APP_DOMAIN_URL}}
-              cd /app/llm_api
+              cd /app/llm-api
               git pull origin HEAD
               docker compose up -d --build --force-recreate
