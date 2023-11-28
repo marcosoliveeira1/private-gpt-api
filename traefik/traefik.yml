@@ -1,0 +1,27 @@
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  docker:
+    exposedByDefault: false
+
+log:
+  level: INFO
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      tlsChallenge: true
+      storage: "/letsencrypt/acme.json"
+
+entrypoints:
+  websecure:
+    address: ":443"
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint: 
+          to: websecure
+          scheme: https
