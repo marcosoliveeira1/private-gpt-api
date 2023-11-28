@@ -1,0 +1,39 @@
+GET /
+host: api.chat.oliveira.software
+
+
+######### 
+POST /question
+host: api.chat.oliveira.software
+Content-Type: application/json
+
+{
+    "prompt": "hi"
+}
+
+######
+POST /api/generate
+host: llm.chat.oliveira.software
+Content-Type: application/json
+
+{
+    "model": "llama2-uncensored:7b",
+    "prompt": "JUST RETURN 'hi!'"
+}
+
+
+######
+GET /api/tags
+host: llm.chat.oliveira.software
+Content-Type: application/json
+
+
+######
+POST /api/pull
+host: llm.chat.oliveira.software
+Content-Type: application/json
+
+{
+    "name": "llama2-uncensored:7b"
+}
+

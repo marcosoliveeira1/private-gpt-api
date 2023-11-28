@@ -29,3 +29,15 @@ services:
       - "traefik.http.routers.llm.entrypoints=websecure"
       - "traefik.http.routers.llm.tls.certresolver=myresolver"
       - "traefik.http.services.llm.loadbalancer.server.port=11434"
+  
+  backend:
+    container_name: backend
+    build: ./backend/
+    volumes:
+      - ./backend:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.${APP_DOMAIN_URL}`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=3001"
