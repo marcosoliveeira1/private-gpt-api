@@ -14,3 +14,18 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik/letsencrypt:/letsencrypt"
       - "./traefik/traefik.yml:/traefik.yml"
+  
+  llm:
+    image: ollama/ollama:latest
+    container_name: llm
+    profiles: ["linux"]
+    ports:
+      - 11434:11434
+    volumes:
+      - ./llm:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.llm.rule=Host(`llm.${APP_DOMAIN_URL}`)"
+      - "traefik.http.routers.llm.entrypoints=websecure"
+      - "traefik.http.routers.llm.tls.certresolver=myresolver"
+      - "traefik.http.services.llm.loadbalancer.server.port=11434"
